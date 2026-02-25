@@ -8,9 +8,13 @@ CORS(app)
 
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
+
+if not url or not key:
+    raise ValueError("Missing SUPABASE_URL or SUPABASE_KEY environment variables")
+
 supabase: Client = create_client(url, key)
 
-@app.route('/')  # ← ADD THIS
+@app.route('/')
 def index():
     return jsonify({"message": "API is running"}), 200
 
@@ -37,4 +41,5 @@ def delete_entry(id):
     return jsonify({"message": "Deleted successfully"}), 200
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
